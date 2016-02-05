@@ -1,0 +1,675 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('FacturacionBundle:Builder:facturaMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Facturar procedimiento {% if tipo == 'A' %} ambulatorio {% endif %}{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span id="jxError">{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+
+    <div class="alert" id="jxMsg" style="display: none;">
+    	<button type="button" class="close" data-dismiss="alert">&times;</button>
+    	<span></span>
+    </div>
+
+	<form action="{{ path('facturacion_procedimiento_save') }}" class="form-inline" method="post" {{ form_enctype(form) }}>
+	    <fieldset>
+	    	<legend>Datos del paciente</legend>
+	    	
+	    	<div class="control-group">
+	    		<label class="control-label required" for="tipoid">Identificaci&oacute;n</label>
+	    		<span id="status" class="label"></span>
+	    		<div class="controls">
+	    			<select class="span1" required="required" name="tipoid" id="tipoid">
+	    				<option value="RC">RC</option>
+	    				<option value="TI">TI</option>
+	    				<option value="CE">CE</option>
+	    				<option value="PA">PA</option>
+	    				<option value="MS">MS</option>
+	    				<option value="AS">AS</option>
+	    				<option value="NV">NV</option>
+	    				<option value="CC" selected="selected">CC</option>
+	    			</select>
+	    			
+	    			<div class="input-append">
+	    				{{ form_widget(form.paciente) }}
+    					<button id="buscar_paciente" class="btn" type="button">Buscar</button>
+    					<button id="btnIframe" href="{{ path('paciente_jx_new') }}" class="fancybox.iframe btn btn-success" type="link" disabled="disabled">Crear</button>
+    				</div>   
+
+                                <div class="input-append">
+    					<div class="fecha">
+		    				{{ form_label(form.fecha) }}
+		    				{{ form_widget(form.fecha) }}
+	    				</div>
+	    			</div>
+    				
+    				<span id="msg" class="label"></span>    				
+					
+					{% ui_box for="#btnIframe" id="frame-fijo" %}
+	   
+	    		</div>
+	    	</div>
+	    	
+	    	{% ajax_status onstart="$('#status').show().html('Buscando...');"
+                 onsuccess="$('#status').html('Success');"
+                 oncomplete="$('#status').html('Completado').delay(3000).fadeOut();"
+                 onerror="$('#status').html('Ups!! Error');"
+                 for="#buscar_paciente" %}
+	    	
+	    	<div>
+	    		<div class="span4">Paciente: <span id="datos-paciente" class="label label-success"></span></div>
+	    	</div>
+	    	
+	    	<div>
+	    		<div class="span3">Fecha de nacimiento: <span id="fn" class="label label-success"></span></div>
+	    	</div>	    		   			
+	            		    		
+	    	<div>
+	    		<div class="span2">Edad: <span id="edad" class="label label-success"></span></div>
+	    	</div>		    			    			
+	            	
+	      	<div>
+	      		<div class="span1">Sexo: <span id="sexo" class="label label-success"></span></div>
+	      	</div>
+	           		    		   			
+			<div>
+				<div class="span1">Rango: <span id="rango" class="label label-success"></span></div>
+			</div>
+	    	
+	    	<div>          	
+	       		<div class="span2">Tipo afiliaci&oacute;n: <span id="ta" class="label label-success"></span></div>
+	       	</div>
+
+	    	<div>
+	    		<div class="span4">
+	     		     	 			
+	            	{{ form_errors(form.cliente) }}
+	            	{{ form_widget(form.cliente) }}
+	            	
+	            	{% ui_button onclick="myDialog.wijdialog('open');" id="new_afiliacion" value="Agregar" disabled="false" %}
+	            	 
+	    		</div>
+	    	</div>
+	    	  
+			{% ui_dialog id="dialog_afiliar"
+			             title="Agregar cliente"
+			             widgetVar="myDialog"
+			             autoOpen=false
+			             modal=true
+						 buttons={
+                 			'Agregar' : js_function("afiliar()"),
+                 			'Cancelar' : js_function("$(this).wijdialog('close')"),
+               			} 
+			%}
+			
+				{{ form_widget(form_afiliacion) }}
+			    
+			{% end_ui_dialog %} 
+	    	
+		</fieldset>
+		
+		<hr>
+		
+		<div class="controls controls-row">
+    		<div class="span4">
+     		    
+     		    <label for="tipoActividad">Tipo de actividad</label>
+     		     	 			
+            	<select required="required" name="tipoActividad" id="tipoActividad">
+    				<option value="n">Normal</option>
+    				<option value="pyp">PYP</option>
+    			</select>	 			
+            	
+            	 
+    		</div>
+    	
+    		<div class="span4">
+     		     	 			
+            	{{ form_errors(form.pyp) }}
+            	{{ form_label(form.pyp) }}
+            	{{ form_widget(form.pyp) }}
+            	 
+    		</div>
+    	
+    		<div class="span4">
+     		     	 			
+            	{{ form_errors(form.autorizacion) }}
+            	{{ form_label(form.autorizacion) }}
+            	{{ form_widget(form.autorizacion) }}
+            	 
+    		</div>
+    	</div>
+    	
+    	<br />
+
+    	<div class="controls controls-row">
+    		<div class="span4">
+    		
+    			<label for="tipop">Tipo de profesional</label>
+     		     	 			
+            	<select required="required" name="tipop" id="tipop">
+    				<option value="">Seleccione</option>
+    				<option value="medico">Médico</option>
+    				<option value="odontologo">Odontologo</option>
+    				<option value="enfermera">Enfermera</option>
+    			</select>
+            	 
+    		</div>
+    	
+    		<div class="span4">
+     		     	 			
+            	{{ form_errors(form.profesional) }}
+            	{{ form_label(form.profesional) }}
+            	{{ form_widget(form.profesional) }}
+            	 
+    		</div>
+    	
+    		<div class="span4">
+     		     	 			
+            	{{ form_errors(form.observacion) }}
+            	{{ form_label(form.observacion) }}
+            	{{ form_widget(form.observacion) }}
+            	 
+    		</div>
+    	</div>
+    	
+    	<br />
+    	
+    	<div class="controls controls-row">
+    		<div class="span4">
+    		
+    			{{ form_errors(form.servicio) }}
+            	{{ form_label(form.servicio) }}
+            	{{ form_widget(form.servicio) }}
+            	 
+    		</div>
+    	
+    		<div class="span4"></div>
+    	
+    		<div class="span4"></div>
+    	</div>
+
+		
+		<div class="form-actions">
+			<input class="btn btn-primary" name="guardar" type="submit" value="Guardar" />
+		    <a href="{{ path('parametrizar_index') }}" class="btn btn-danger">Cancelar</a>
+		</div>
+	</form>
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+
+		$("#knx_facturacionbundle_facturatype_servicio").change(function(){
+			var sel = "";
+			var tipo = "{{ tipo }}";
+
+			sel = $("#knx_facturacionbundle_facturatype_servicio option:selected").text();
+
+			if(tipo == "A"){
+
+				if(sel == 'URGENCIAS' || sel == 'HOSPITALIZACION' || sel == 'OBSERVACION'){
+	
+					alert('Por favor selecciona un servicio valido');
+	
+					$("#knx_facturacionbundle_facturatype_servicio").val('');
+				}
+			}else{
+				if(sel != 'URGENCIAS' || sel != 'HOSPITALIZACION' || sel == 'OBSERVACION'){
+					
+					alert('Por favor selecciona un servicio valido');
+	
+					$("#knx_facturacionbundle_facturatype_servicio").val('');
+				}
+			} 
+		});
+
+		$("#buscar_paciente").click(function(){
+				        
+	        var tipoid = $("#tipoid").val();
+	        var identificacion = $("#knx_facturacionbundle_facturatype_paciente").val();
+
+	        $("#msg").empty();
+
+	        if(tipoid == 'MS'){
+
+				var m = $("#knx_facturacionbundle_facturatype_paciente").val().toString().trim();
+
+				if (m != '' ){
+	
+					var expreg = new RegExp(/^(\d{5,10})\-([0-9]{1}$)/);
+				
+					if(!expreg.test(m)){
+						alert("Identificación Incorrecta");
+						return false;
+					}else{
+						
+						$("#buscar_paciente").attr('disabled', 'disabled');
+						
+			    		var url="{{ path('facturacion_paciente_buscar') }}";
+			
+			    		$.post(url,{
+			    			tipoid: tipoid,
+			    			identificacion: identificacion
+				         },function(data){
+				             if(data.responseCode==200 ){
+
+					            $("#msg").removeClass("label-important");
+				            	$("#msg").addClass("label-success");
+								$("#msg").html("Creado el "+data.creado);
+								$("#datos-paciente").html(data.nombre);
+								$("#fn").html(data.nacimiento);
+								$("#edad").html(data.edad);
+								$("#sexo").html(data.sexo);
+								$("#rango").html(data.rango);
+								$("#ta").html(data.afiliacion);
+
+								var select = $('#knx_facturacionbundle_facturatype_cliente');
+		                		if(select.prop) {
+		                		  var options = select.prop('options');
+		                		}
+		                		else {
+		                		  var options = select.attr('options');
+		                		}
+		                		$('option', select).remove();
+
+		                	    if(data.cliente){
+		                	    	options[options.length] = new Option('Seleccione cliente', '');
+
+		                	    	$.each(data.cliente, function(val, text) {
+		                    		    options[options.length] = new Option(text, val);
+		                    		});
+
+		                    	}else{
+		                    		options[options.length] = new Option('--', '');
+		                        }
+
+		                		select.val('');
+		                		select.removeAttr('disabled');
+
+		                		$('#new_afiliacion').removeAttr('disabled');
+		                		$('#new_afiliacion').removeClass('ui-state-disabled');
+
+		                		$("#btnIframe").attr('disabled', 'disabled');
+		                		
+				             }
+				             else if(data.responseCode==400){
+
+					            $("#msg").removeClass("label-success");
+								$("#msg").addClass("label-important");
+								$("#msg").html("El paciente con "+tipoid+" número "+identificacion+" no existe en la base de datos, verifique datos e intente nuevamente.");
+								$("#datos-paciente").empty();
+								$("#fn").empty();
+								$("#edad").empty();
+								$("#sexo").empty();
+								$("#rango").empty();
+								$("#ta").empty();
+								$('#knx_facturacionbundle_facturatype_cliente').attr('disabled','disabled');
+
+								$("#btnIframe").removeAttr('disabled');
+
+
+								$('#new_afiliacion').attr('disabled', 'disabled');
+		                		$('#new_afiliacion').addClass('ui-state-disabled');	
+				     		}else{
+			         	    	alert("Ha ocurrido un error en el sistema.");
+			             	}
+			      		});						
+					}
+				}else{
+	        
+			    	if($.isNumeric(identificacion)){
+		
+			    		$("#buscar_paciente").attr('disabled', 'disabled');
+			
+			    		var url="{{ path('facturacion_paciente_buscar') }}";
+			
+			    		$.post(url,{
+			    			tipoid: tipoid,
+			    			identificacion: identificacion
+				         },function(data){
+				             if(data.responseCode==200 ){
+		
+					            $("#msg").removeClass("label-important");
+				            	$("#msg").addClass("label-success");
+								$("#msg").html("Creado el "+data.creado);
+								$("#datos-paciente").html(data.nombre);
+								$("#fn").html(data.nacimiento);
+								$("#edad").html(data.edad);
+								$("#sexo").html(data.sexo);
+								$("#rango").html(data.rango);
+								$("#ta").html(data.afiliacion);
+		
+								var select = $('#knx_facturacionbundle_facturatype_cliente');
+		                		if(select.prop) {
+		                		  var options = select.prop('options');
+		                		}
+		                		else {
+		                		  var options = select.attr('options');
+		                		}
+		                		$('option', select).remove();
+		
+		                	    if(data.cliente){
+		                	    	options[options.length] = new Option('Seleccione cliente', '');
+		
+		                	    	$.each(data.cliente, function(val, text) {
+		                    		    options[options.length] = new Option(text, val);
+		                    		});
+		
+		                    	}else{
+		                    		options[options.length] = new Option('--', '');
+		                        }
+		
+		                		select.val('');
+		                		select.removeAttr('disabled');
+		
+		                		$('#new_afiliacion').removeAttr('disabled');
+		                		$('#new_afiliacion').removeClass('ui-state-disabled');
+		
+		                		$("#btnIframe").attr('disabled', 'disabled');
+		                		
+				             }
+				             else if(data.responseCode==400){
+		
+					            $("#msg").removeClass("label-success");
+								$("#msg").addClass("label-important");
+								$("#msg").html("El paciente con "+tipoid+" número "+identificacion+" no existe en la base de datos, verifique datos e intente nuevamente.");
+								$("#datos-paciente").empty();
+								$("#fn").empty();
+								$("#edad").empty();
+								$("#sexo").empty();
+								$("#rango").empty();
+								$("#ta").empty();
+								$('#knx_facturacionbundle_facturatype_cliente').attr('disabled','disabled');
+		
+								$("#btnIframe").removeAttr('disabled');
+		
+		
+								$('#new_afiliacion').attr('disabled', 'disabled');
+		                		$('#new_afiliacion').addClass('ui-state-disabled');			
+				             }
+				             else{
+				         	    alert("Ha ocurrido un error en el sistema.");
+				             }
+				      	});
+		
+			    		$("#buscar_paciente").removeAttr('disabled');
+				    }else{
+					    alert("Por favor ingrese un valor valido.");
+					}
+				}
+	        }
+		});
+
+		function afiliar(){
+
+			var url = "{{ path('afiliacion_ajax_save') }}";
+
+			var cliente = $("#newAfiliacion_cliente").val();
+			var paciente = $("#knx_facturacionbundle_facturatype_paciente").val();
+			var tipoRegist = $("#newAfiliacion_tipoRegist").val();
+			var rango = $("#newAfiliacion_rango").val();
+
+			$.post(url,{
+                cliente: cliente,
+                paciente: paciente,
+                tipoRegist: tipoRegist,
+                rango: rango
+            },function(data){
+                if(data.responseCode==200 ){
+
+                	var select = $('#knx_facturacionbundle_facturatype_cliente');
+            		if(select.prop) {
+            		  var options = select.prop('options');
+            		}
+            		else {
+            		  var options = select.attr('options');
+            		}
+
+            		options[options.length] = new Option(data.nombre, data.id);
+
+            		$('#msg_afiliacion').remove();
+            		$('#dialog_afiliar').prepend('<span id="msg_afiliacion" class="label label-success">Cliente agregado</span>');
+                 }
+                 else if(data.responseCode==400){
+                	 $('#msg_afiliacion').remove();
+                	 $('#dialog_afiliar').prepend('<span id="msg_afiliacion" class="label label-important">Cliente NO agregado</span>');
+                 }
+                 else{
+             	    alert("Ha ocurrido un error en el sistema.");
+                 }
+          });
+		}
+
+		$("#knx_facturacionbundle_facturatype_cliente").change(function(){
+
+			$("#tipoActividad").val('n');
+			$("knx_facturacionbundle_facturatype_pyp").val('');
+			$('#knx_facturacionbundle_facturatype_pyp').attr('disabled','disabled');
+
+			$('#jxMsg').css('display', 'none');
+			$('#jxMsg > span').empty();
+		});
+
+		$("#tipoActividad").change(function(){
+
+			var ta = $("#tipoActividad").val();
+			
+			
+			if(ta == "pyp"){
+
+				var cliente = $('#knx_facturacionbundle_facturatype_cliente').val();
+
+				var url = "{{ path('cargo_pyp_buscar') }}";
+
+				var edad = $("#edad").text();
+				var sexo = $("#sexo").text();
+				var tipo_cargo = 'P';
+
+				if(edad == ""){
+					alert("Seleccione un paciente");
+					return false;
+				}
+
+				if(cliente == ""){
+					alert("Seleccione un cliente");
+					return false;
+				}
+
+				$.post(url,{
+	                edad: edad,
+	                sexo: sexo,
+	                cliente: cliente,
+	                tipo: tipo_cargo
+	            },function(data){
+	                if(data.responseCode==200 ){
+
+	                	var select = $('#knx_facturacionbundle_facturatype_pyp');
+                		if(select.prop) {
+                		  var options = select.prop('options');
+                		}
+                		else {
+                		  var options = select.attr('options');
+                		}
+                		$('option', select).remove();
+
+                	    if(data.categoria){
+                	    	options[options.length] = new Option('Seleccione categoría', '');
+
+                    	}else{
+                    		options[options.length] = new Option('--', '');
+                        }
+
+                		$.each(data.categoria, function(val, text) {
+                		    options[options.length] = new Option(text, val);
+                		});
+
+                		select.val('');
+                		select.removeAttr('disabled');
+	                 }
+	                 else if(data.responseCode==400){
+
+						$('#jxMsg > span').prepend(data.msg);
+	                	$('#jxMsg').css('display', 'block');
+	                 }
+	                 else{
+	             	    alert("Ha ocurrido un error en el sistema.");
+	                 }
+	          });
+			}else{
+				$('#knx_facturacionbundle_facturatype_pyp').attr('disabled', 'disabled');
+				$('#knx_facturacionbundle_facturatype_pyp').val();
+				$('#jxMsg').css('display', 'none');
+				$('#jxMsg > span').empty();
+			}
+		});
+
+
+		$("#tipop").change(function(){
+
+			var tp = $("#tipop").val();
+
+			if(tp == ""){ 
+				alert("El tipo de profesional seleccionado es invalido.");
+				return false;
+			}			
+
+			var url = "{{ path('usuario_buscar_cargo') }}";
+
+			var select = $('#knx_facturacionbundle_facturatype_profesional');
+
+			$.post(url,{
+                cargo: tp
+            },function(data){
+                if(data.responseCode==200 ){
+
+                	if(select.prop) {
+                	  var options = select.prop('options');
+                	}
+                	else {
+                	  var options = select.attr('options');
+                	}
+                	$('option', select).remove();
+
+                	if(data.usuarios){
+                		options[options.length] = new Option('Seleccione profesional', '');
+                    }else{
+                    	options[options.length] = new Option('--', '');
+                  	}
+
+                	$.each(data.usuarios, function(val, text) {
+                		options[options.length] = new Option(text, val);
+                	});
+
+                	select.val('');
+                	select.removeAttr('disabled');
+				}
+	            else if(data.responseCode==400){
+	            	select.val('');
+		            select.attr('disabled', 'disabled');
+	            	alert("No hay usuarios para el tipo seleccionado.");
+	          	}
+	            else{
+	            	alert("Ha ocurrido un error en el sistema.");
+	      		}
+			});
+		});
+
+		$("#newAfiliacion_cliente").change(function(){
+			
+		    var cliente = $("#newAfiliacion_cliente").val(); 
+		    var url="{{ path('afiliacion_tipo_cliente') }}";   
+		    
+		    $.post(url,{
+		        cliente: cliente
+		 },function(data){
+		     if(data.responseCode==200 ){
+
+		 		cargarTipoEps(data.regimen);
+		 		                    
+		     }
+		     else if(data.responseCode==400){
+		     	$('#ajaxMsg').html(data.msg);
+		         $('#ajaxMsg').css("color","red");
+		     }
+		     else{
+		 	    alert("Ha ocurrido un error en el sistema.");
+		     }
+		 });
+		});
+
+		function cargarTipoEps(regimen)
+		{
+			var contributivo = {
+						'' : '--select--',
+					    'cotizante' : 'Cotizante',
+					    'esposo/esposa' : 'Esposo/Esposa',
+					    'hijo/hija' : 'Hijo/Hija',
+					    'madre' : 'Madre',
+					    'padre' : 'Padre',			    
+					    'adicional' : 'Adicional'
+					};
+			var subsidiado = {
+					'' : '--select--',
+					'cero' : 'Cero',
+					'uno' : 'Uno',
+					'dos' : 'Dos',
+					'tres' : 'Tres'
+					};	
+
+			var select = $('#newAfiliacion_tipoRegist');
+			if(select.prop) {
+				  var options = select.prop('options');
+				}
+				else {
+				  var options = select.attr('options');
+				}
+				$(select).empty();
+
+			if(regimen == 1 || regimen == 3){
+					$.each(contributivo, function(val, text) {
+					    options[options.length] = new Option(text, val);
+					});
+					$('#newAfiliacion_rango').show('slow');
+				}
+			else if(regimen == 2){
+					$.each(subsidiado, function(val, text) {
+					    options[options.length] = new Option(text, val);
+					});
+					$('#newAfiliacion_rango').hide('slow');
+				}
+			else{
+					$('#newAfiliacion_tipoRegist').append(new Option('Particular/otro', 'particular/otro', true, true));
+					$('#newAfiliacion_rango').hide('slow');
+				}
+				
+			select.val('');
+					
+
+		}
+	</script>
+	
+{% endblock %}

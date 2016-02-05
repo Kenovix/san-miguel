@@ -1,0 +1,85 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('FarmaciaBundle:Builder:farmaciaMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Insumo_Pyp {% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}	   
+ 
+    <h4>Informacion Categoria Pyp</h4>
+	<table class="table">	
+        <tbody>
+        	<tr>
+                <td><strong>Codigo</strong></td>                
+                <td>{{ pimv.pyp.codigo }}</td>
+                                                       
+            </tr>   
+            <tr>                                
+              <td><strong>Nombre</strong></td>
+                <td>{{ pimv.pyp.nombre }}</td>        
+            </tr>            
+           
+        </tbody>
+    </table>     
+    
+    <hr>
+    <h4>Informacion del Item</h4>    
+    <table class="table">
+
+        <tbody>
+        	<tr>
+                <td><strong>Codigo Cups</strong></td>                
+                <td>{{ pimv.imv.codCups }}</td>
+              	<td><strong>Nombre</strong></td>
+                <td>{{ pimv.imv.nombre }}</td>
+                <td><strong>Tipo</strong></td>
+                <td>{{ pimv.imv.tipoImv }}</td>                                         
+            </tr>   
+            <tr>
+                <td><strong>Edad inicio (Años)</strong></td>
+                <td>{{ pimv.edadIni }}</td>
+                <td><strong>Edad fin (Años)</strong></td>
+                <td>{{ pimv.edadFin }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><strong>Rango (Años)</strong></td>
+                <td>{{ pimv.rango }}</td>
+                <td><strong>Sexo</strong></td>
+                <td>{{ pimv.sexo }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+        </tbody>
+    </table>
+            
+<div class="btn-group">
+	    <a href="{{ path('imvpyp_edit', {'pyp': pimv.pyp.id, 'imv': pimv.imv.id}) }}"class="btn btn-primary">Modificar</a>
+	    <a href="{{ path('imvpyp_new') }}" class="btn">Volver</a>
+    </div>
+{% endblock %}

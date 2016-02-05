@@ -1,0 +1,25 @@
+usuario_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: UsuarioBundle:Default:index }
+    
+usuario_list:
+    pattern: /list
+    defaults: { _controller: UsuarioBundle:Usuario:list }
+
+usuario_edit:
+    pattern: /edit/{usuario}
+    defaults: { _controller: UsuarioBundle:Usuario:edit }
+    
+usuario_update:
+    pattern: /update/{usuario}
+    defaults: { _controller: UsuarioBundle:Usuario:update }
+    
+usuario_show:
+    pattern: /show/{usuario}
+    defaults: { _controller: UsuarioBundle:Usuario:show }
+    
+usuario_buscar_cargo:
+    pattern:  /buscar/porcargo
+    defaults: { _controller: UsuarioBundle:Usuario:ajaxBuscarUsuarioPorCargo }
+    requirements:
+        _method:  POST

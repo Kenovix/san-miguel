@@ -1,0 +1,70 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('HistoriaBundle:Builder:HistoriaMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Listado de consultas en urgencias{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+
+{% if urgencias_hc %}
+	    <table class="table table-hover">
+	        <thead>
+	            <tr>           
+                        <th>Factura</th>
+	                <th>C&eacute;dula</th>
+	                <th>Nombre</th>
+	                <th>Entidad</th>
+	                <th>Fecha</th>
+	                <th>Observación</th>
+	                <th>Opciones</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        {% for hc in urgencias_hc%}
+	            <tr>
+                        <td>{{ hc.factura.id }}</td>
+	                <td>{{ hc.factura.paciente.identificacion }}</td>
+	                <td>{{ hc.factura.paciente.priNombre | capitalize }} {{ hc.factura.paciente.segNombre | capitalize }} {{ hc.factura.paciente.priApellido | capitalize }} {{ hc.factura.paciente.segApellido | capitalize }}</td>
+	                <td>{{ hc.factura.cliente.nombre | capitalize }}</td>
+	                <td>{{ hc.factura.fecha | date('d-m-Y H:i') }}</td>
+	                <td>{{ hc.factura.observacion }}</td>
+	                <td><a class="btn" href="{{ path('nota_validaHcRuta', {'factura':hc.factura.id}) }}"><i class="icon-edit"></i></a></td>
+	            </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+	    
+	    <div class="navigation">	    
+    		{{ knp_pagination_render(urgencias_hc) }}    	
+		</div>
+	{% else %}
+		<div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">X</button>
+	        <span>No historias de urgencias disponibles</span>
+	    </div>
+	{% endif %}
+	
+{% endblock %}

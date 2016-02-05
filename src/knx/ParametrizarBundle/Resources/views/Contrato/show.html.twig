@@ -1,0 +1,151 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('ParametrizarBundle:Builder:superAdminMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Información del contrato{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+
+	<table class="table">
+        <tbody>
+        	<tr>
+                <td><strong>Número</strong></td>
+                <td>{{ contrato.numero }}</td>
+                <td><strong>Contacto</strong></td>
+                <td>{{ contrato.contacto }}</td>
+            </tr>
+            <tr>
+                <td><strong>Inicia</strong></td>
+                <td>{{ contrato.fechaInicio | date('d-m-Y') }}</td>
+                <td><strong>Termina</strong></td>
+                <td>{{ contrato.fechaFin | date('d-m-Y') }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Procentaje</strong></td>
+                <td>{{ contrato.porcentaje * 100 }}%</td>
+                <td><strong>Estado</strong></td>
+                <td>{{ contrato.estado }}</td>
+            </tr>
+            <tr>
+                <td><strong>Tipo</strong></td>
+                <td>{{ contrato.tipo }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+	<div class="btn-group">
+	    <a href="{{ path('contrato_edit', {'contrato':contrato.id}) }}" class="btn btn-primary">Modificar</a>
+	    <a href="{{ path('cliente_show', {'cliente': contrato.cliente.id	}) }}" class="btn">Volver</a>
+    </div>
+
+	<hr />
+
+	<h2>Contratos</h2>
+		    
+	{% if (contrato.tipo == 'P' or contrato.tipo == 'PP') %}
+	
+		{% if contratado %} 
+	    
+			<table class="table">
+				<tr>
+			    	<th>Código</th>
+			    	<th>Nombre</th>
+			    	<th>Valor</th>
+			    	<th>Observación</th>
+			    	<th>Creado</th>
+			    	<th>Ultima modificación</th>
+			  	</tr>
+		    
+				{% for pactado in contratado %}    
+		    		<tr>
+			    		<td>{{ pactado.cargo.cups }}</td>
+		    			<td><a href="{{ path('contrato_cargo_show', {'contrato': contrato.id, 'cargo': pactado.cargo.id }) }}" title="Modificar actividad">{{ pactado.cargo.nombre }}</a></td>
+		    			<td>
+		    				{% if pactado.precio %}
+		    					<strong>${{ pactado.precio | number_format(0,',','.') }}</strong>
+		    				{% else %}
+		    					${{ ((pactado.cargo.valor * pactado.contrato.porcentaje) + pactado.cargo.valor) | number_format(0,',','.') }}
+		    				{% endif %}
+		    			</td>
+		    			<td>{{ pactado.observacion }}</td>
+		    			<td>{{ pactado.created | date('d-m-Y') }}</td>
+		    			<td>{{ pactado.updated | date('d-m-Y') }}</td>
+		  			</tr>
+		  		{% else %}
+		  			<div class="alert alert-info">
+			        	<span>No hay actividades contratadas</span>
+			    	</div>
+				{% endfor %}
+			
+			</table>
+		
+		{% endif %}
+	
+	{% else %}
+		{% if contratado %} 
+			<table class="table">
+				<tr>
+			    	<th>Códigosss</th>
+			    	<th>Nombre</th>
+			    	<th>Valor</th>
+			    	<th>Estado</th>
+			    	<th>Observación</th>
+			  	</tr>
+		    
+				{% for pactado in contratado %}    
+		    		<tr>
+			    		<td>{{ pactado.imv.cums }}</td>
+		    			<td><a href="{{ path('imv_contrato_show', {'contrato': contrato.id, 'imv': pactado.imv.id }) }}" title="Modificar actividad">{{ pactado.imv.nombre }}</a></td>
+		    			<td>
+		    				{% if pactado.precio %}
+		    					<strong>${{ pactado.precio | number_format(0,',','.') }}</strong>
+		    				{% endif %}
+		    			</td>
+		    			<td>{{ pactado.estado }}</td>
+		    			<td>{{ pactado.observacion }}</td>		    		
+		  			</tr>
+		  		{% else %}
+		  			<div class="alert alert-info">
+			        	<span>No hay insumos contratadas</span>
+			    	</div>
+				{% endfor %}
+			
+			</table>
+		
+		{% endif %}
+		
+	{% endif %}
+	
+	{% if (contrato.tipo == 'P' or contrato.tipo == 'PP') %}
+		<a href="{{ path('contrato_cargo_new', {'contrato': contrato.id}) }}" class="btn btn-primary">Nueva actividad</a>
+	{% else %}
+		<a href="{{ path('imv_contrato_new', {'contrato': contrato.id}) }}" class="btn btn-primary">Nuevo medicamento</a>
+	{% endif %}
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('HistoriaBundle:Builder:HistoriaMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Hospitalizacion y Observacion listado de Historias{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span id="jxError">{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+
+{% set tipoDestino = {'':'Pendiente', '1' : 'Observacion', '2' : 'Hospitalizacion' } %}
+{% if urgencias_hc %}
+	    <table class="table table-hover">
+	        <thead>
+	            <tr>
+                        <th>Factura</th>
+	                <th>Ultima Actulaización</th>
+	                <th>Paciente</th>
+	                <th>Cedula</th>
+	                <th>Entidad</th>
+	                <th>Servicio ingre</th>
+	                <th>Destino</th>
+	                <th>Editar</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        {% for hc in urgencias_hc%}
+	            <tr>
+                        <td>{{ hc.factura.id}}</td>
+	                <td>{{ hc.updated | date('H:m d/m/Y')}}</td>
+	                <td>{{ hc.factura.paciente.priNombre }} {{ hc.factura.paciente.priApellido }}</td>
+	                <td>{{ hc.factura.paciente.identificacion }}</td>
+	                <td>{{ hc.factura.cliente.nombre}}</td>
+	                <td>{{ hc.factura.servicio.nombre}}</td>
+	                <td>{{ tipoDestino[hc.tipoDestino]}}</td>
+	                <td>
+		                {% if perfil %}
+		                	<a href="{{ path('historia_edit', { 'factura': hc.factura.id }) }}"  class="btn"><i class="icon-edit"></i></a>
+		                {% else %}
+		                	<a href="{{ path('nota_list', { 'historia': hc.id }) }}"  class="btn"><i class="icon-edit"></i></a>
+		                {% endif %}
+	                </td>
+	            </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+	    
+	    <div class="navigation">	    
+    		{{ knp_pagination_render(urgencias_hc) }}    	
+		</div>
+	{% else %}
+		<div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>No existen pacientes en urgencias ni hospitalizados</span>
+	    </div>
+	{% endif %}
+	
+{% endblock %}

@@ -1,0 +1,279 @@
+facturacion_index:
+    pattern:  /inicio
+    defaults: { _controller: FacturacionBundle:Default:inicio }
+
+facturacion_consulta_new:
+    pattern:  /consulta/new
+    defaults: { _controller: FacturacionBundle:Factura:newConsulta }
+    
+facturacion_consulta_save:
+    pattern:  /consulta/save
+    defaults: { _controller: FacturacionBundle:Factura:saveConsulta }
+    
+facturacion_consulta_show:
+    pattern:  /consulta/{factura}/show
+    defaults: { _controller: FacturacionBundle:Factura:showConsulta }
+
+facturacion_consulta_edit:
+    pattern:  /consulta/{factura}/edit
+    defaults: { _controller: FacturacionBundle:Factura:editConsulta }
+    
+facturacion_procedimiento_new:
+    pattern:  /procedimiento/{tipo}/new
+    defaults: { _controller: FacturacionBundle:Factura:newProcedimiento }
+    
+facturacion_procedimiento_save:
+    pattern:  /procedimiento/save
+    defaults: { _controller: FacturacionBundle:Factura:saveProcedimiento }
+    
+facturacion_procedimiento_show:
+    pattern:  /procedimiento/{factura}/show
+    defaults: { _controller: FacturacionBundle:Factura:showProcedimiento }
+
+facturacion_procedimiento_edit:
+    pattern:  /procedimiento/{factura}/edit
+    defaults: { _controller: FacturacionBundle:Factura:editProcedimiento }
+    
+facturacion_insumo_new:
+    pattern:  /insumo/{tipo}/new
+    defaults: { _controller: FacturacionBundle:Factura:newInsumo }
+    
+facturacion_insumo_save:
+    pattern:  /insumo/save
+    defaults: { _controller: FacturacionBundle:Factura:saveInsumo }
+    
+facturacion_insumo_show:
+    pattern:  /insumo/{factura}/show
+    defaults: { _controller: FacturacionBundle:Factura:showInsumo }
+
+facturacion_insumo_edit:
+    pattern:  /insumo/{factura}/edit
+    defaults: { _controller: FacturacionBundle:Factura:editInsumo }
+    
+facturacion_paciente_buscar:
+    pattern:  /paciente/buscar
+    defaults: { _controller: FacturacionBundle:Factura:jxBuscarPaciente }
+    requirements:
+        _method: POST
+        
+facturacion_cargo_save:
+    pattern:  /cargo/save
+    defaults: { _controller: FacturacionBundle:Factura:jxCargoSave }
+    requirements:
+        _method: POST
+        
+facturacion_cargo_delete:
+    pattern:  /cargo/delete
+    defaults: { _controller: FacturacionBundle:Factura:jxCargoDelete }
+    requirements:
+        _method: POST
+        
+facturacion_imv_save:
+    pattern:  /imv/save
+    defaults: { _controller: FacturacionBundle:Factura:jxImvSave }
+    requirements:
+        _method: POST
+        
+facturacion_imv_delete:
+    pattern:  /imv/delete
+    defaults: { _controller: FacturacionBundle:Factura:jxImvDelete }
+    requirements:
+        _method: POST
+        
+facturacion_imv_imprimir:
+    pattern:  /imv/{factura}/imprimir
+    defaults: { _controller: FacturacionBundle:Factura:imprimirImv }
+        
+facturacion_fv_imprimir:
+    pattern:  /fv/{factura}/imprimir
+    defaults: { _controller: FacturacionBundle:Factura:imprimir }
+    
+facturacion_urgencias_list:
+    pattern:  /urgencias/list
+    defaults: { _controller: FacturacionBundle:Factura:urgenciasList }
+    
+facturacion_insumo_urg_new:
+    pattern:  /urgencias/list/medicamentos
+    defaults: { _controller: FacturacionBundle:Factura:urgenciasImvList }
+    
+facturacion_urgenciasprint_list:
+    pattern:  /urgenciasprint/list
+    defaults: { _controller: FacturacionBundle:Factura:urgenciasPrint }    
+    
+facturacion_urgencias_factura_print:
+    pattern:  /urgenciasprint/{factura}
+    defaults: { _controller: FacturacionBundle:Factura:facturaPrint } 
+    
+facturacion_urgencias_factura_show:
+    pattern:  /urgenciasshow/{factura}/show
+    defaults: { _controller: FacturacionBundle:Factura:facturaShow } 
+        
+#******************** FACTURA CARGO ***************************#
+
+reporte_cargo_new:
+    pattern:  /reporte/cargo/new
+    defaults: { _controller: FacturacionBundle:FacturaCargo:informeCargo }
+    
+reporte_cargo_question:
+    pattern:  /reporte/cargo/question
+    defaults: { _controller: FacturacionBundle:FacturaCargo:questionTipoCargo }
+
+#******************** MORBILIDAD ***************************#
+
+morbilidad_vista:
+    pattern:  /morbilidad/new
+    defaults: { _controller: FacturacionBundle:Morbilidad:vista }
+    
+morbilidad_list:
+    pattern:  /morbilidad/list
+    defaults: { _controller: FacturacionBundle:Morbilidad:list }
+
+#******************** FACTURA ANULAR/REIPRIMIR ***************************#
+
+facturas_search:
+    pattern:  /facturas/search
+    defaults: { _controller: FacturacionBundle:Facturas:search }
+    
+facturas_list:
+    pattern:  /facturas/list
+    defaults: { _controller: FacturacionBundle:Facturas:list } 
+    
+facturas_anular:
+    pattern:  /facturas/{factura1}/anular
+    defaults: { _controller: FacturacionBundle:Facturas:anular }
+    
+facturas_motivo:
+    pattern:  /facturas/{factura1}/motivo
+    defaults: { _controller: FacturacionBundle:Facturas:motivo }    
+    
+facturas_rimprimir:
+    pattern:  /facturas/{factura1}/rimprimir
+    defaults: { _controller: FacturacionBundle:Facturas:rimprimir }    
+    
+#******************** Consolidado ***************************#
+
+consolidados_vista:
+    pattern:  /consolidado/search
+    defaults: { _controller: FacturacionBundle:FacturaCargo:generarConsolidado }
+    
+consolidados_resultado:
+    pattern:  /consolidado/result
+    defaults: { _controller: FacturacionBundle:FacturaCargo:resultConsolidado }
+    
+consolidados_vista_imprimir:
+    pattern:  /consolidado/search/print
+    defaults: { _controller: FacturacionBundle:FacturaCargo:searchConsolidado }
+    
+consolidados_imprimir:
+    pattern:  /consolidado/print
+    defaults: { _controller: FacturacionBundle:FacturaCargo:printConsolidado }
+        
+    
+    
+#******************** Cierre de caja ***************************#
+
+cierre_vista:
+    pattern:  /cierre/search
+    defaults: { _controller: FacturacionBundle:FacturaCargo:cierreCaja }
+    
+cierre_result:
+    pattern:  /cierre/result
+    defaults: { _controller: FacturacionBundle:FacturaCargo:resultCierre }
+    
+cierre_vista_imprimir:
+    pattern:  /cierre/search/print
+    defaults: { _controller: FacturacionBundle:FacturaCargo:searchCierre }
+    
+cierre_imprimir:
+    pattern:  /cierre/print
+    defaults: { _controller: FacturacionBundle:FacturaCargo:printCierre }    
+    
+    
+    
+#******************** Factura final ***************************#
+
+factura_final_vista:
+    pattern:  /factfinal/search
+    defaults: { _controller: FacturacionBundle:FacturaCargo:facturaFinal }
+    
+factura_final_result:
+    pattern:  /factfinal/result
+    defaults: { _controller: FacturacionBundle:FacturaCargo:resultFactfinal }
+    requirements:
+        _method:  POST
+    
+factura_final_save:
+    pattern:  /factfinal/save/{cliente}
+    defaults: { _controller: FacturacionBundle:FacturaCargo:saveFactfinal }  
+    
+factura_final_show:
+    pattern:  /factura/final/show/{id}
+    defaults: { _controller: FacturacionBundle:FacturaCargo:showFactfinal } 
+    
+factura_final_imprimir:
+    pattern:  /factura/final/imprimir/{id}
+    defaults: { _controller: FacturacionBundle:FacturaCargo:imprimirFactfinal }    
+ 
+facturas_final_search:
+    pattern:  /factfinal/searchFinal
+    defaults: { _controller: FacturacionBundle:FacturaCargo:searchFinal }
+    
+facturas_final_list:
+    pattern:  /factfinal/list
+    defaults: { _controller: FacturacionBundle:FacturaCargo:list }  
+ 
+facturas_final_anular:
+    pattern:  /factfinal/{factura1}/anular
+    defaults: { _controller: FacturacionBundle:FacturaCargo:anularFactfinal }
+    
+facturas_final_motivo:
+    pattern:  /factfinal/{factura1}/motivo
+    defaults: { _controller: FacturacionBundle:FacturaCargo:motivoFactfinal }    
+    
+facturas_final_rimprimir:
+    pattern:  /factfinal/{factura1}/rimprimir
+    defaults: { _controller: FacturacionBundle:FacturaCargo:rimprimirFactfinal }
+    
+facturas_final_rips:
+    pattern:  /factfinal/{factura}/rips
+    defaults: { _controller: FacturacionBundle:Factura:rips }
+    
+facturas_download_rips:
+    pattern:  /factfinal/download/{factura_final}/rips
+    defaults: { _controller: FacturacionBundle:Factura:downloadRips }
+    
+#******************** FACTURA CAMBIAR CLIENTE ***************************#
+
+facturas_searchcf:
+    pattern:  /facturas/searchcf
+    defaults: { _controller: FacturacionBundle:Facturas:searchcf }
+    
+facturas_listcf:
+    pattern:  /facturas/listcf
+    defaults: { _controller: FacturacionBundle:Facturas:listcf } 
+    
+facturas_cambiarcf:
+    pattern:  /facturas/{factura1}/cambiarcf
+    defaults: { _controller: FacturacionBundle:Facturas:cambiarcf }
+    
+facturas_confirmarcf:
+    pattern:  /facturas/{factura1}/confirmarcf
+    defaults: { _controller: FacturacionBundle:Facturas:confirmarcf }    
+    
+#******************** FACTURA CAMBIAR PROFESIONAL ***************************#
+
+facturas_searchpro:
+    pattern:  /facturas/searchpro
+    defaults: { _controller: FacturacionBundle:Facturas:searchpro }
+    
+facturas_listpro:
+    pattern:  /facturas/listpro
+    defaults: { _controller: FacturacionBundle:Facturas:listpro } 
+    
+facturas_cambiarpro:
+    pattern:  /facturas/{factura1}/cambiarpro
+    defaults: { _controller: FacturacionBundle:Facturas:cambiarpro }
+    
+facturas_confirmarpro:
+    pattern:  /facturas/{factura1}/confirmarpro
+    defaults: { _controller: FacturacionBundle:Facturas:confirmarpro }

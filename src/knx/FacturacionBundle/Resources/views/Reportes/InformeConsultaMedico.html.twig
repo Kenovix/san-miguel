@@ -1,0 +1,44 @@
+{% extends "::simple.html.twig" %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+{%set cant = 0%}
+	<div>
+		<p><b>Desde:</b> {{ dateStart | date('d-M-Y') }} <b>Hasta:</b> {{ dateEnd | date('d-M-Y') }}</p><br/>
+		<table border="1">			
+			<thead>
+				<tr>
+					<th><b> Nombre			</b></th>		
+					<th><b> Apellido		</b></th>
+					<th><b> especialidad	</b></th>
+					<th><b> Servicio		</b></th>
+					<th><b> Codigo Cargo	</b></th>
+					<th><b> Nombre Cargo	</b></th>
+					<th><b> Cantidad		</b></th>												
+				</tr>
+			</thead>
+			<tbody>
+				{% for entity in facturaCargo %}
+                                {%set cant= cant + entity.cantidad%}
+					<tr>
+						<td>{{ entity.nombre }}</td>
+						<td>{{ entity.apellido}}</td>
+						<td>{{ entity.especialidad}}</td>
+						<td>{{ entity.servicio }}</td>
+						<td>{{ entity.soat}}</td>
+						<td>{{ entity.cargo }}</td>
+						<td>{{ entity.cantidad }}</td>
+					</tr>
+                                        
+				{% endfor %}
+                                        <tr>
+						<td colspan="6"><b>Total</b></td>
+                                                <td><b>{{ cant|number_format(0) }}</b></td>
+                                                
+                                        </tr>    
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+<?php
+
+class Mytable {
+
+//echo "$tabla";
+public function __construct($host,$db,$user,$pw,$tabla)
+		{
+			$this->host=$host;
+			$this->database=$db;
+			$this->user=$user;
+			$this->pass=$pw;
+			$this->backHeader="#A4A4A4";
+			$this->back1="#F2F2F2";
+			$this->back2="#D8D8D8";
+			$this->fontHeader="white";
+			$this->fontCeldas="blue";
+			$this->tabla=$tabla;
+			$this->tablaMovInv="movimientosinv";
+			$this->TotalTabla=0;
+			$this->TotalFilaCosto=0;
+			$this->TotalFilaVenta=0;
+		}
+		
+		
+public function conectar()
+  {
+	//echo('entrando');
+	 //echo "dibujando $tabla<br>";
+	$conexion1 = new conexion($this->host,$this->database,$this->user,$this->pass);
+	$this->con=$conexion1->conectar();
+	//echo('conectado');
+}  
+

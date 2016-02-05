@@ -1,0 +1,233 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('ParametrizarBundle:Builder:superAdminMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Subir información de pacientes{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+  <form action="{{ path('file_upload_csv') }}" method="post" {{ form_enctype(form) }}  class="form-horizontal" enctype="multipart/form-data">
+    <fieldset>
+    	<legend>Carga de archivos a la base de datos solo archivos csv</legend>
+    	<div id="ajaxMsg"></div>
+    	
+    	<div class="control-group">
+    		<label class="control-label" for="inputEmail">Archivo CSV:</label>
+    		<div class="controls">
+      			<input type="file" name="archivo" id="archivo" class="span4" placeholder="Seleccione el archivo">
+      		</div>
+    	</div>
+    	
+    	<div class="control-group">
+    		{{ form_label(form.cliente) }}
+    		<div class="controls">
+					{{ form_widget(form.cliente,{ 'attr': {'class': 'span4'} }) }}
+    		</div>
+    	</div>
+    	<div class="control-group">
+	    		{{ form_label(form.tipoRegist) }}
+	    		<div class="controls">
+	    			{{ form_errors(form.tipoRegist) }}	
+					{{ form_widget(form.tipoRegist,{ 'attr': {'class': 'span4'} }) }}
+	    		</div>
+    		</div>
+    	{{ form_rest(form) }}
+    </fieldset>
+    
+    {% if nameFile %}
+	    <div class="control-group error">
+	  		<label class="control-label" for="inputError">Please Download File</label>
+	  		<div class="controls">
+	    		<a href="{{ path('file_download_csv', {'nameFile': nameFile }) }}" class="btn btn-info"  >File.txt</a>
+	    		<span class="help-inline">It Has an Importan Information</span>
+	  		</div>
+		</div>
+	{% endif %}
+
+    <button class="btn btn-primary" type="submit" onclick="alert('Recuerde esperar hasta que el archivo termine de cargar')">Subir Archivo</button>
+    <a href="#" class="btn btn-success" onclick="viewHelp.wijdialog('open');" >Ayuda</a>
+
+  </form>
+
+  {% ui_dialog id="viewHelp"
+               title="Documentacion para el formato de ayuda"
+               widgetVar="viewHelp"
+               width="1000px"
+               autoOpen=false
+               modal=true
+  %}
+  <div>
+  	<p> Formato para procesar la información del archivo de los pacientes, para que la información se cargue correctamente
+  		se debe diligenciar la información de la siguiente forma:<br/>
+  		1- El archivo debe de estar con extensión CSV o TXT<br/>
+  		2- En una hoja de calculo la información debe de lucir como se muestra acontinuación:
+  	</p>
+  	<table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<th>tipo_id</th>
+    			<th>identificacion</th>
+    			<th>pri_nombre</th>
+    			<th>seg_nombre</th>
+    			<th>pri_apellido</th>
+    			<th>seg_apellido</th>
+    			<th>f_n</th>
+    			<th>sexo</th>
+    			<th>estado_civil</th>
+    			<th>depto</th>
+    			<th>mupio</th>
+    			<th>direccion</th>
+    			<th>zona</th>
+    			<th>telefono</th>
+    			<th>movil</th>
+    			<th>email</th>
+    			<th>pert_etnica</th>
+    			<th>nivle_edu</th>    			
+    			<th>ocupacion_id</th>
+    			<th>tipo_des</th>    			
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td>CC, MS, PA, RC, TI, CE, NV, AS</td>
+    			<td>12345678901</td>
+    			<td>Pedro</td>
+    			<td>Null</td>
+    			<td>Segura</td>
+    			<td>Null</td>
+    			<td>YYYY-MM-DD</td>
+    			<td>M, F</td>
+    			<td>SOLTERO, CASADO, UNION_LIBRE</td>
+    			<td>24</td>
+    			<td>1010</td>
+    			<td>Null</td>
+    			<td>U, R</td>
+    			<td>Null</td>
+    			<td>Null</td>
+    			<td>Null</td>
+    			<td>6</td>
+    			<td>10</td>
+    			<td>1</td>
+    			<td>6</td>    			
+    		</tr>
+    	</tbody>
+    </table>
+
+
+    <p> 3- En el ejemplo anterior se visualiza la forma como debe de estar digitalizada la información para el paciente.<br/>
+    	4- Los campos que aparecen de tipo Null se pueden dejar en blanco si este no contiene información alguna.<br/>
+    	5- Despues de tener la información correctamente ordenada se puede proceder a guardar el archivo desde una hoja de calculo.<br/>
+    	6- Cuando se guarde la información desde una hoja de calculo tener en cuenta la extencion y separar los campos solo por coma.<br/>
+    	7- No concatenar estructura de texto entre comillas SOLO ASIGNAR SEPARAR COLUMNAS POR COMA.<br/>
+    	8- En el siguiente link <a href="{{ path('file_download_csv', {'nameFile': 'plantilla_paciente.csv' }) }}" class="btn btn-info"  >Descargar plantilla</a> se puede descargar la plantilla correspondiente para digilencia la información de los pacientes. 
+    </p>
+  </div>
+
+  {% end_ui_dialog %}
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+
+$(function() {
+	alert('La extension del arvhivo debe ser CSV o TXT');
+});
+
+$("#uploadFile_cliente").change(function(){
+	
+    var cliente = $("#uploadFile_cliente").val(); 
+    var url="{{ path('afiliacion_tipo_cliente') }}";   
+    
+    $.post(url,{
+        cliente: cliente
+ },function(data){
+     if(data.responseCode==200 ){
+
+ 		cargarTipoEps(data.regimen);
+ 		                    
+     }
+     else if(data.responseCode==400){
+     	$('#ajaxMsg').html(data.msg);
+         $('#ajaxMsg').css("color","red");
+     }
+     else{
+ 	    alert("Ha ocurrido un error en el sistema.");
+     }
+ });
+});
+
+function cargarTipoEps(regimen)
+{
+	var contributivo = {
+				'' : '--select--',
+			    'cotizante' : 'Cotizante',
+			    'esposo/esposa' : 'Esposo/Esposa',
+			    'hijo/hija' : 'Hijo/Hija',
+			    'madre' : 'Madre',
+			    'padre' : 'Padre',			    
+			    'adicional' : 'Adicional'
+			};
+	var subsidiado = {
+			'' : '--select--',
+			'0' : 'Cero',
+			'1' : 'Uno',
+			'2' : 'Dos',
+			'3' : 'Tres'
+			};	
+
+	var select = $('#uploadFile_tipoRegist');
+	if(select.prop) {
+		  var options = select.prop('options');
+		}
+		else {
+		  var options = select.attr('options');
+		}
+		$(select).empty();
+
+	if(regimen == 1 || regimen == 3){
+			$.each(contributivo, function(val, text) {
+			    options[options.length] = new Option(text, val);
+			});
+			$('#uploadFile_tipoRegist').hide('slow');
+			$('#uploadFile_tipoRegist').show('slow');
+		}
+	else if(regimen == 2){
+			$.each(subsidiado, function(val, text) {
+			    options[options.length] = new Option(text, val);
+			});
+			$('#uploadFile_tipoRegist').hide('slow');
+			$('#uploadFile_tipoRegist').show('slow');
+		}
+	else{
+			$('#uploadFile_tipoRegist').append(new Option('Particular/otro', 'particular/otro', true, true));
+			
+		}
+		
+	select.val('');
+}
+</script>
+{% endblock %}

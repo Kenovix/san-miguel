@@ -1,0 +1,37 @@
+<?php
+
+namespace knx\FacturacionBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+class FacturaType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+        	->add('paciente', 'text', array('attr' => array('placeholder' => 'Identificación', 'class' => 'span6'), 'property_path' => false))
+        	->add('fecha', 'datetime', array('attr' => array('label' => 'Fecha')))
+        	->add('cliente', 'choice', array('disabled' => true,'required'=>true, 'choices' => array('' => 'Seleccione cliente'), 'property_path' => false))
+            ->add('pyp', 'choice', array('label' => 'Categoría de PYP', 'disabled' => true, 'choices' => array('' => 'Seleccione una categoría')))
+            ->add('autorizacion')
+            ->add('observacion')
+            ->add('profesional', 'choice', array('label' => 'Profesional', 'disabled' => true,'required'=>true , 'choices' => array('' => 'Seleccione un profesional')))
+            ->add('servicio', 'entity', array('required' => true, 'label' => 'Centro de costo', 'class' => 'knx\ParametrizarBundle\Entity\Servicio', 'empty_value' => 'Elige un servicio'))
+            ->add('farmacia', 'entity', array('required' => false, 'label' => 'Farmacia', 'class' => 'knx\FarmaciaBundle\Entity\Farmacia', 'empty_value' => 'Elige una farmacia'))
+        ;
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'knx\FacturacionBundle\Entity\Factura'
+        ));
+    }
+
+    public function getName()
+    {
+        return 'knx_facturacionbundle_facturatype';
+    }
+}

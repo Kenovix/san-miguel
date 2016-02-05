@@ -1,0 +1,120 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('FarmaciaBundle:Builder:farmaciaMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Información del ingreso {% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+
+	<table class="table">
+        <thead>
+	        <tr>
+                <th>No.</th>
+                <th>Almacen</th>
+                <th>Proveedor</th>
+                <th>Factura</th>
+                <td>Fecha</th>
+                <th>Valor Total</th>
+                <th>Valor Neto</th>
+                <th>Valor Iva</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+            	<td>{{ ingreso.id }}</td>
+            	<td>{{ ingreso.almacen }}</td>
+            	<td>{{ ingreso.proveedor }}</td>
+            	<td>{{ ingreso.numFact }}</td>
+            	<td>{{ ingreso.fecha | date('d-m-Y')}}</td>
+            	<td>$ {{ ingreso.valorT| number_format(0,',','.')}}</td>
+            	<td>$ {{ ingreso.valorN| number_format(0,',','.')}}</td>
+            	<td>$ {{ ingreso.valorIva| number_format(0,',','.')}}</td>
+        	</tr>
+        </tbody>
+    </table>
+
+	<div class="btn-group">
+	    <a href="{{ path('ingreso_edit', {'ingreso':ingreso.id}) }}" class="btn btn-primary">Modificar</a>
+	    <a href="{{ path('ingreso_list') }}" class="btn">Volver</a>
+    </div>
+
+
+    <hr>
+    <h3>Cargos</h3>
+    {% if inventario %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Imv</th>
+                <th>Cantidad</th>
+                <th>Precio Compra</th>
+                <th>Precio de Venta</th>
+                <th>Precio Total</th>
+
+
+
+            </tr>
+        </thead>
+        <tbody>
+        {% for inv in inventario %}
+            <tr>
+                <td>{{ loop.index }}</td>
+	    		<td><a href="{{ path('inventario_show', {'ingreso': inv.ingreso.id, 'imv':inv.imv.id}) }}" title="Modificar actividad">{{ inv.imv.nombre }}</a></td>
+                <td>{{ inv.cant }} </td>
+                <td>$ {{ inv.precioCompra | number_format(0,',','.')}} </td>
+                <td>$ {{ inv.imv.precioVenta | number_format(0,',','.')}} </td>
+                <td>$ {{ inv.precioTotal | number_format(0,',','.')}} </td>
+
+            </tr>
+        {% endfor %}
+        </table>
+	{% else %}
+		<div class="alert alert-info">
+	        <span>No hay actividades categorizadas</span>
+	    </div>
+	{% endif %}
+
+
+
+    <div class="navigation">
+    		{{ knp_pagination_render(inventario) }}
+		</div>
+
+    <div class="btn-group">
+	    <a href="{{ path('inventario_new', {'ingreso':ingreso.id}) }}" class="btn btn-primary">Asociar Insumo</a>
+
+    </div>
+
+
+{% endblock %}
+
+
+
+
+
+

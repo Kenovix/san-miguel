@@ -1,0 +1,98 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('FarmaciaBundle:Builder:farmaciaMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Nueva Existencia{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+
+
+	
+{% block cuerpo %}
+
+	<form action="{{ path('imv_save') }}" class="form-horizontal" method="post" {{ form_enctype(form) }}>
+	    <fieldset>
+	    	<legend>Datos de Existencia</legend>
+	    	    
+		   {{ form_widget(form) }}
+		   
+			<div class="form-actions">
+				<input class="btn btn-primary" name="guardar" type="submit" value="Guardar" />
+			    <a href="{{ path('imv_search') }}" class="btn btn-danger">Cancelar</a>
+			</div>
+		</fieldset>			
+	</form>
+{% endblock %}
+
+
+{% block javascripts %}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#gstImv_codCups').attr('disabled', true);
+			$('#gstImv_tipoMedicamento').attr('disabled', true);
+			$('#gstImv_codAdmin').attr('disabled', true);
+			$('#gstImv_cums').attr('disabled', true);
+			$('#gstImv_nombre').attr('disabled', true);
+			$('#gstImv_formaFarmaceutica').attr('disabled', true);
+			$('#gstImv_concentracion').attr('disabled', true);
+			$('#gstImv_uniMedida').attr('disabled', true);
+			$('#gstImv_jeringa').attr('disabled', true);
+			$('#gstImv_dosis').attr('disabled', true);
+			
+		});
+		
+		$('#gstImv_tipoImv').change(function() {
+
+			var opcion = $('#gstImv_tipoImv').val();
+			
+			if(opcion == 'V'){
+
+				$('#gstImv_codCups').removeAttr('disabled');
+				$('#gstImv_codAdmin').attr('disabled', true);
+				$('#gstImv_tipoMedicamento').attr('disabled', true);                         
+				$('#gstImv_cums').attr('disabled', true);
+				$('#gstImv_nombre').removeAttr('disabled');
+				$('#gstImv_formaFarmaceutica').attr('disabled', true);
+				$('#gstImv_concentracion').attr('disabled', true);
+				$('#gstImv_uniMedida').attr('disabled', true);
+				$('#gstImv_jeringa').removeAttr('disabled');
+				$('#gstImv_dosis').removeAttr('disabled');
+
+			}else{
+
+				$('#gstImv_codCups').removeAttr('disabled');
+				$('#gstImv_tipoMedicamento').removeAttr('disabled');    
+				$('#gstImv_codAdmin').removeAttr('disabled');
+				$('#gstImv_cums').removeAttr('disabled');
+				$('#gstImv_nombre').removeAttr('disabled');
+				$('#gstImv_formaFarmaceutica').removeAttr('disabled');
+				$('#gstImv_concentracion').removeAttr('disabled');
+				$('#gstImv_uniMedida').removeAttr('disabled');
+				$('#gstImv_jeringa').attr('disabled', true);
+				$('#gstImv_dosis').attr('disabled', true);
+			}
+		});
+	</script>
+{% endblock %}

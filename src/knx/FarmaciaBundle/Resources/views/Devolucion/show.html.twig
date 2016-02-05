@@ -1,0 +1,60 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('FarmaciaBundle:Builder:farmaciaMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Información del Devolucion{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+
+	<table class="table">
+        <thead>
+	        <tr>
+                <th>Fecha.</th>
+                <td>Item</th>
+                <td>Proveedor</th>
+                <th>Almacen</th>
+                <th>Cantidad_Existencia</th>
+                <th>Cantidad_Devolucion</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+            	<td>{{ devfarma.fecha | date('d-m-Y')}}</td>
+            	<td>{{ devfarma.imv }}</td>
+            	<td>{{ devfarma.proveedor }}</td>
+            	<td>{{ devfarma.almacen }}</td>
+                <td>{{ imv.cantT }}</td>
+            	<td>{{ devfarma.cant}}</td>
+        	</tr>
+        </tbody>
+    </table>
+
+	<div class="btn-group">
+	    <a href="{{ path('devolucion_list') }}" class="btn">Volver</a>
+    </div>
+{% endblock %}

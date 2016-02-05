@@ -1,0 +1,118 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('HistoriaBundle:Builder:HistoriaMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Buscar Historia{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+	
+	{% if historia %}
+	    
+  	 <h4>Historia clinica {{ paciente.priNombre}}  {{ paciente.priApellido}} {{ paciente.tipoId }} {{ paciente.identificacion }}</h4>	 
+  
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Ingreso DD-MM-AA</th>
+                <th>Egreso DD-MM-AA</th>
+                <th>Servicio. Ingreso</th>             
+                <th>Ver Historia</th>
+                <th>Ver Notas</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in historia %}
+            <tr>           
+                <td>{{ loop.index }}</td>
+			    <td>{{ entity.fechaIngre|date('d-m-Y H:i') }}</td>
+			    <td>{{ entity.fechaEgre|date('d-m-Y H:i') }}</td>              	
+                <td><strong>{{ entity.factura.servicio.nombre }}</strong></td>
+                
+                {% if entity.serviEgre %}
+                    
+                	{% if entity.destino == '1' or entity.destino == '3' or entity.destino == '4' %}    
+                		{% if entity.factura.servicio.id == '6' %}            	                	                           
+                			<td><a href="{{ path('odontologia_imprime', { 'factura': entity.factura.id }) }}" target="blank" class="btn"><i class="icon-print"></i></a></td>
+                		{% else %}
+                			<td><a href="{{ path('historia_imprime', { 'factura': entity.factura.id }) }}" target="blank" class="btn"><i class="icon-print"></i></a></td>
+                		{% endif %}                		
+                	{% elseif perfil %}
+                	    
+                		{% if entity.factura.servicio.id == '6' %}            	                	                           
+                			<td><a href="{{ path('odontologia_edit', { 'factura': entity.factura.id }) }}" target="blank" class="btn"><i class="icon-edit"></i></a></td>
+                		{% else %}
+                			<td><a href="{{ path('historia_edit', { 'factura': entity.factura.id }) }}" target="blank" class="btn"><i class="icon-edit"></i></a></td>
+                		{% endif %} 
+                		
+                  	{% else %}                  
+                  		<td>-</td>                    			
+                	{% endif %}                	          	
+                 {% elseif perfil %}
+                 
+                 		{% if entity.factura.servicio.id == '6' %}            	                	                           
+                			<td><a href="{{ path('odontologia_edit', { 'factura': entity.factura.id }) }}" target="blank" class="btn"><i class="icon-edit"></i></a></td>
+                		{% else %}
+                			<td><a href="{{ path('historia_edit', { 'factura': entity.factura.id }) }}" target="blank" class="btn"><i class="icon-edit"></i></a></td>
+                		{% endif %}                  	
+                		                  		                  		
+                 {% else %}                  
+                  	<td>-</td>                  	
+                {% endif %}
+                
+                {% if entity.serviEgre %}                    
+					{% if entity.destino == '1' or entity.destino == '3' or entity.destino == '4' %} 
+					
+						{% if entity.factura.servicio.id == '6' %}            	                	                           
+                			<td>-</td>
+                		{% else %}
+                			<td><a href="{{ path('nota_print', { 'historia': entity.id }) }}" target='blank' class="btn"><i class="icon-print"></i></a></td>
+                		{% endif %}                		               	                	                           
+                		
+                	{% else %}
+                		{% if entity.factura.servicio.id == '6' %}            	                	                           
+                			<td>-</td>
+                		{% else %}
+                			<td><a href="{{ path('nota_list', { 'historia': entity.id }) }}"  class="btn"><i class="icon-edit"></i></a></td>
+                		{% endif %}                		
+                	{% endif %}
+                {% else %}
+                		{% if entity.factura.servicio.id == '6' %}            	                	                           
+                			<td>-</td>
+                		{% else %}
+                			<td><a href="{{ path('nota_list', { 'historia': entity.id }) }}"  class="btn"><i class="icon-edit"></i></a></td>
+                		{% endif %}                		
+                {% endif %}
+            </tr>
+         {% else %}
+         	<tr>
+         		<td colspan="10">No hay información disponible.</td>
+         	</tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	 {% endif %}	    
+{% endblock %}

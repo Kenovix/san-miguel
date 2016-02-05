@@ -1,0 +1,94 @@
+{% extends "::simple.html.twig" %}
+
+{% block stylesheets %}
+<style>
+		
+	table.cliente {
+    	font-size: 9pt;
+    }
+    
+    table.descripcion {
+    	font-size: 12pt;
+        
+    }
+    
+    table.valores{
+    	font-size:12pt;
+    }
+</style>     
+{% endblock %}
+
+{% block body %}
+	
+	<table border="1" CELLPADDING="5" class="cliente">
+ 		<tbody>
+            <tr>
+            	<td width="15%"><strong>FECHA:</strong></td>                
+            	<td width="35%">{{ entity.fecha|date('d-m-Y') }}</td>
+            	<td width="13%"><strong>CEDULA O NIT:</strong></td>                
+            	<td width="17%">{{ entity.cliente.nit }}</td>
+            	<td width="20%"><strong>FACTURA DE VENTA No</strong>.</td>            	
+            </tr>
+            <tr>
+            	<td width="15%"><strong>NOMBRE:</strong></td>
+            	<td width="35%">{{ entity.cliente.nombre }}</td>                
+            	<td width="13%"><strong>RAZON SOCIAL</strong></td>                
+            	<td width="17%">{{ entity.cliente.razon }}</td>
+            	<td width="20%" rowspan="2" align="center"><br /><br />{{ entity.id }}</td>            	            	
+            </tr>
+            <tr>
+            	<td width="15%"><strong>DIRECIÓN:</strong></td>
+            	<td width="35%">{{ entity.cliente.direccion }}</td>
+            	<td width="13%"><strong>TELÉFONO:</strong></td>                
+            	<td width="17%">{{ entity.cliente.telefono }}</td>
+            </tr>
+        </tbody>             
+	</table>
+	
+	<br />
+		
+	<table border="1" CELLPADDING="5" class="descripcion">
+ 		<tbody>
+            <tr>
+            	<td width="80%" align="center"><strong>CONCEPTO</strong></td>
+            	<td width="20%" align="center"><strong>VALOR</strong></td>            	              
+            </tr>
+            <tr>
+            	<td width="80%" height="450">
+            		<br /><br />{{ entity.concepto }}
+            		{% if entity.observacion %}
+            			<br /><br /><br /><br />Nota: {{ entity.observacion }}
+            		{% endif %}
+            	</td>
+            	<td width="20%" align="center"><br /><br />${{ (entity.valor ) |number_format(0) }}</td>                
+            </tr>
+        </tbody>             
+	</table>
+	
+	<table border="1" CELLPADDING="5" class="valores">
+ 		<tbody>
+            <tr >
+                <td width="50%"  height="10"></td>
+                <td width="30%" align="left" height="10"><b>COPAGO</b></td>
+            	<td width="20%" align="center" height="10">${{ entity.copago }}</td>                
+            </tr>  
+            <tr >
+                <td width="50%"  height="10"></td>
+                <td width="30%" align="left" height="10"><b>ASUMIDO</b></td>
+            	<td width="20%" align="center" height="10">${{ entity.asumido }}</td>                
+            </tr>  
+            <tr >
+                <td width="50%"  height="10"><b></b></td>
+                <td width="30%" align="left" height="10"><b>VALOR TOTAL</b></td>
+            	<td width="20%" align="center" height="10">${{ (entity.valor - entity.copago - entity.asumido)|number_format(0) }}</td>                
+            </tr>        
+            <tr>
+            	<td width="50%" height="80">Recibi Conforme:</td>
+            	<td width="50%" height="80">Entrega:</td>                
+            	
+            </tr>                    	       
+        </tbody>             
+	</table>
+	
+	<span style="font-size: 6pt; text-align:center">Esta Factura de Venta es un titulo valor negociable, de acuerdo con la ley 1231 de 2008 y los articulos 621, 772, 773 y 774 del C.C. y el Art. 617 del Estatuto Tributario</span>
+{% endblock %}

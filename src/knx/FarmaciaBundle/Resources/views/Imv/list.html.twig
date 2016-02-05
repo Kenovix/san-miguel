@@ -1,0 +1,85 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('FarmaciaBundle:Builder:farmaciaMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Resultado Existencia{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+
+<form name="consultaImv" id="consultaImv" class="form-horizontal" method="post" action="{{ path('imv_list') }}" {{ form_enctype(form) }}>
+		    <fieldset>
+		    	<legend>Busqueda</legend>
+					{{ form_widget(form) }}
+		    </fieldset>
+
+		   <div class="form-actions">
+		   				<a href="{{ path('imv_new') }}" class="btn btn-primary">Nueva Existencia</a>
+						<input class="btn btn-primary" name="Buscar"  type="submit" value="Buscar" />
+			   			 <a href="{{ path('imv_search') }}" class="btn">Volver</a>
+
+			</div>
+
+		</form>
+
+	{% if imv %}
+	    <table class="table">
+	        <thead>
+	            <tr>
+	                <th>No.</th>
+	              	<th>Codigo</th>
+	                <th>Tipo</th>
+	                <th>Nombre</th>
+	                <th>Cant_Existencia</th>
+	                <th>Precio Venta</th>
+
+
+
+	            </tr>
+	        </thead>
+	        <tbody>
+	        {% for imv in imv %}
+	            <tr>
+	                <td>{{ loop.index }}</td>
+	                <td><a href="{{ path('imv_show', {'imv':imv.id}) }}">{{ imv.codCups}}</a></td>
+	             	 <td>{{ imv.tipoImv }}</td>
+	             	 <td>{{ imv.nombre }}</td>
+	             	 <td>{{ imv.cantT }}</td>
+	             	 <td>{{ imv.precioVenta }}</td>
+
+
+	            </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+	{% else %}
+		<div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>No existe existencias creadas</span>
+	    </div>
+	{% endif %}
+
+
+{% endblock %}

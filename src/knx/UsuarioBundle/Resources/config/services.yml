@@ -1,0 +1,9 @@
+parameters:
+#    usuario.example.class: knx\UsuarioBundle\Example
+
+services:
+    mi_propio.registration.form.type:
+        class: knx\UsuarioBundle\Form\UsuarioType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: mi_user_registration }

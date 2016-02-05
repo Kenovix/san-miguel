@@ -1,0 +1,174 @@
+{% extends "::admin_layout.html.twig" %}
+
+{% block menu %}
+	{{ knp_menu_render('ParametrizarBundle:Builder:superAdminMenu') }}
+{% endblock %}
+
+{% block rastro %}{{ wo_render_breadcrumbs() }}{% endblock %}
+
+{% block titulo %}Información del cliente{% endblock %}
+
+{% block msg %}
+	{% if app.session.hasFlash('ok') %}
+	    <div class="alert alert-success">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('ok') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('info') %}
+		<div class="alert alert-info">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('info') }}</span>
+	    </div>
+	{% elseif app.session.hasFlash('error') %}
+		<div class="alert alert-error">
+	    	<button data-dismiss="alert" class="close" type="button">×</button>
+	        <span>{{ app.session.flash('error') }}</span>
+	    </div>
+	{% endif %}
+{% endblock %}
+
+{% block cuerpo %}
+	
+	{% set label_tipo = {'1': 'Contributivo', '2': 'Subsidiado', '3': 'Vinculado', '4': 'Particular', '5': 'Otro'} %}
+
+	<table class="table">
+        <tbody>
+        	<tr>
+                <td><strong>Nit.</strong></td>
+                <td>{{ cliente.nit }}</td>
+                <td><strong>Nombre</strong></td>
+                <td>{{ cliente.nombre }}</td>
+            </tr>
+            <tr>
+                <td><strong>Código</strong></td>
+                <td>{{ cliente.codigo }}</td>
+                <td><strong>Tipo</strong></td>
+                <td>{{ label_tipo[cliente.tipo] }}</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Dirección</strong></td>
+                <td>{{ cliente.direccion }}</td>
+                <td><strong>Teléfono</strong></td>
+                <td>{{ cliente.telefono }}</td>
+            </tr>
+            <tr>
+                <td><strong>Estado</strong></td>
+                <td>{{ cliente.estado }}</td>
+                <td></td>
+                <td></td>
+            </tr>    
+        </tbody>
+    </table>
+
+	<div class="btn-group">
+	    <a href="{{ path('cliente_edit', {'cliente':cliente.id}) }}" class="btn btn-primary">Modificar</a>
+	    <a href="{{ path('cliente_list') }}" class="btn">Volver</a>
+    </div>
+    
+    <hr />
+    
+    <h3>Contratos</h3>
+    
+	{% ui_tabs %}
+		{% ui_tab label="Procedimientos" %}
+			{% if procedimientos %}
+    
+				<table class="table table-hover">
+					<tr>
+			    		<th>Número</th>
+			    		<th>Inicia</th>
+			    		<th>Finaliza</th>
+			    		<th>Contacto</th>
+			    		<th>Procentaje</th>
+			    		<th>Estado</th>
+			    		<th>Opciones</th>
+			  		</tr>
+		    
+		    	{% for procedimiento in procedimientos %}    
+		    		<tr>
+			    		<td><a href="{{ path('contrato_show', {'contrato': procedimiento.id}) }}">{{ procedimiento.numero }}</a></td>
+			    		<td>{{ procedimiento.fechaInicio | date('d-m-Y')}}</td>
+			    		<td>{{ procedimiento.fechaFin | date('d-m-Y') }}</td>
+			    		<td>{{ procedimiento.contacto }}</td>
+			    		<td>{{ procedimiento.porcentaje * 100 }}%</td>
+			    		<td>{{ procedimiento.estado }}</td>
+			    		<td>{{ procedimiento.estado }}</td>
+			  		</tr>
+				{% endfor %}
+				
+				</table>
+			{% else %}
+				<span>No hay contratos</span>
+			{% endif %}
+		{% end_ui_tab %} 
+       	
+		{% ui_tab label="Medicamentos" %}
+			{% if farmacos %}    
+				<table class="table table-hover">
+					<tr>
+			    		<th>Número</th>
+			    		<th>Inicia</th>
+			    		<th>Finaliza</th>
+			    		<th>Contacto</th>
+			    		<th>Procentaje</th>
+			    		<th>Estado</th>
+			    		<th>Opciones</th>
+			  		</tr>
+		    
+		    	{% for farmaco in farmacos %}    
+		    		<tr>
+			    		<td><a href="{{ path('contrato_show', {'contrato': farmaco.id}) }}">{{ farmaco.numero }}</a></td>
+			    		<td>{{ farmaco.fechaInicio | date('d-m-Y')}}</td>
+			    		<td>{{ farmaco.fechaFin | date('d-m-Y') }}</td>
+			    		<td>{{ farmaco.contacto }}</td>
+			    		<td>{{ farmaco.porcentaje * 100 }}%</td>
+			    		<td>{{ farmaco.estado }}</td>
+			    		<td>{{ farmaco.estado }}</td>
+			  		</tr>
+				{% endfor %}
+				
+				</table>
+			{% else %}
+				<span>No hay contratos</span>
+			{% endif %}
+       	{% end_ui_tab %}
+       	
+       	{% ui_tab label="PYP" %}
+			{% if prevencion %}    
+				<table class="table table-hover">
+					<tr>
+			    		<th>Número</th>
+			    		<th>Inicia</th>
+			    		<th>Finaliza</th>
+			    		<th>Contacto</th>
+			    		<th>Procentaje</th>
+			    		<th>Estado</th>
+			    		<th>Opciones</th>
+			  		</tr>
+		    
+		    	{% for pp in prevencion %}    
+		    		<tr>
+			    		<td><a href="{{ path('contrato_show', {'contrato': pp.id}) }}">{{ pp.numero }}</a></td>
+			    		<td>{{ pp.fechaInicio | date('d-m-Y')}}</td>
+			    		<td>{{ pp.fechaFin | date('d-m-Y') }}</td>
+			    		<td>{{ pp.contacto }}</td>
+			    		<td>{{ pp.porcentaje * 100 }}%</td>
+			    		<td>{{ pp.estado }}</td>
+			    		<td>{{ pp.estado }}</td>
+			  		</tr>
+				{% endfor %}
+				
+				</table>
+			{% else %}
+				<span>No hay contratos</span>
+			{% endif %}
+       	{% end_ui_tab %}
+
+	{% end_ui_tabs %}
+	
+	<hr />
+
+	<a href="{{ path('contrato_new', {'cliente': cliente.id}) }}" class="btn btn-primary">Crear contrato</a>
+
+{% endblock %}
