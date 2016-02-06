@@ -21,8 +21,8 @@ function GetGlobalConnectionOptions()
   'server' => 'localhost',
   'port' => '3306',
   'username' => 'root',
-  'password' => 'pirlo1985',
-  'database' => 'hsm_dev'
+  'password' => 'root',
+  'database' => 'sissg_dev'
 );
 }
 

@@ -1,7 +1,7 @@
 <?php
 	
-	$conexion = mysql_connect("localhost","root","pirlo1985");
-	mysql_select_db("hsm_dev",$conexion) or die(mysql_error());
+	$conexion = mysql_connect("localhost","root","root");
+	mysql_select_db("sissg_dev",$conexion) or die(mysql_error());
 	date_default_timezone_set("America/Bogota");
 	
 	$CuentaDestino=110510;   //Cuenta Por defecto para caja menor
