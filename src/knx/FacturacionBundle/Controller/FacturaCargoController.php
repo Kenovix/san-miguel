@@ -1155,9 +1155,7 @@ class FacturaCargoController extends Controller
     	$entity->setIva(0); 
         $entity->setCobrar(0);
         
-        if(trim($tipos) == 'P'){
-        	$entity->setObservacion('Actividades de Promoción y Prevención');
-        }
+
         
         $form   = $this->createForm(new FacturacionType(), $entity);
 
