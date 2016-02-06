@@ -1,13 +1,13 @@
 <?php
 $host="localhost";
 $user="root";
-$pw="pirlo1985";
-$db="hsm_dev";
+$pw="root";
+$db="sissg_dev";
 
 $servi='localhost';
-$baseDatos='hsm_dev';
+$baseDatos='sissg_dev';
 $usuario='root';
-$passsword='pirlo1985';	
+$passsword='root';	
 
 $COMPrinter="COM6";
 $COMBarcode="COM2";

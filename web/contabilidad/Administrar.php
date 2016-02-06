@@ -4,7 +4,7 @@ session_start();
    header("Location: index.php");
 }
    $tipo = $_SESSION['tipouser'];
-   if($tipo<>"administrador"){
+   if($tipo<>"Administrador"){
    header("Location: Menu.php");   
 }	
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
