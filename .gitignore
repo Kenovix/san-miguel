@@ -63,3 +63,4 @@ local.properties
 *.DS_Store
 nbproject/
 
+web/contabilidad/admin/templates_c/*
