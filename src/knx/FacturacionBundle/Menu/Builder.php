@@ -21,8 +21,9 @@ class Builder extends ContainerAware
 			$menu['Parametrizar']->addChild('Cargo', array('route' => 'cargo_list'));
 			$menu['Parametrizar']->addChild('Categoría pyp', array('route' => 'pyp_list'));
 			$menu['Parametrizar']->addChild('Centro de costo', array('route' => 'servicio_list'));
-			$menu['Parametrizar']->addChild('Cliente', array('route' => 'cliente_list'));
 			$menu['Parametrizar']->addChild('Empresa', array('route' => 'empresa_list'));
+			$menu['Parametrizar']->addChild('Cliente', array('route' => 'cliente_list'));
+>>>>>>> 1cf26968bd66104956e5d9357b17aa85c75949f6
 			$menu['Parametrizar']->addChild('Proveedor', array('route' => 'proveedor_list'));
 			$menu['Parametrizar']->addChild('Paciente', array('uri' => '#'));
 			$menu['Parametrizar']['Paciente']->addChild('Listar/Nuevo', array('route' => 'paciente_list', 'routeParameters' => array('char' => 'A')));
