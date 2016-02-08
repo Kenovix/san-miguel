@@ -9,7 +9,7 @@
 		<tr>
 			<td><h4 align="left">{{ factura.fecha | date('d-m-Y H:i') }}</h4></td>
 			<td></td>
-			<td><h4 align="right">FACTURA DE VENTA No. {{ factura.id }}</h4></td>
+			<td><h3 align="right">FACTURA DE VENTA No. {{ factura.id }}</h3></td>
 		</tr>
 		<tr>
 			<td><strong>Identificación:</strong> {{ factura.paciente.identificacion }}</td>
@@ -22,23 +22,13 @@
 		</tr>
 		<tr>
 			<td><strong>Dirección:</strong> {{ factura.paciente.direccion }}</td>
-			<td><strong>Movil:</strong> {{ factura.paciente.movil }}</td>
+			<td><strong>Teléfono:</strong> {{ factura.paciente.telefono }}</td>
 			<td><strong>Municipio :</strong> {{ mupio.municipio }}</td>
 		</tr>
 		<tr>
 			<td><strong>Centro costo:</strong> {{ factura.servicio.nombre }}</td>
 			<td><strong>Historia:</strong> {{ factura.paciente.identificacion }}</td>
 			<td><strong>Aseguradora:</strong> {{ factura.cliente.nombre }}</td>
-		</tr>
-		<tr>
-			<td><strong>Autorización:</strong> {{ factura.autorizacion }}</td>
-			<td><strong>Profesional:</strong> {{ factura.profesional }}</td>			
-			<td><strong>Tipo actividad:</strong> {% if factura.pyp is empty %} Normal {% else %} PYP {% endif %}</td>
-		</tr>
-                <tr>
-			<td></td>
-			<td></td>			
-                        <td><strong>Nombre Pyp:</strong>  {% if factura.pyp is empty %}  {%else%} {{pyp.nombre}} {%endif%} </td>
 		</tr>
 	</tbody>
 </table>
@@ -60,12 +50,10 @@
 	<tbody>
 		{% set total = 0 %}
 		{% set copago = 0 %}
-                {% set pagar = 0 %}
 		{% set perdida = 0 %}
 		{% for cargo in cargos %}
 		
-                        {% set total = (total + cargo.vrFacturado) %}
-                        {% set pagar = (pagar + cargo.cobrarPte) %}
+			{% set total = (total + (cargo.cantidad * cargo.vrUnitario)) %}
 			{% set copago = (copago + cargo.pagoPte) %}
 			{% set perdida = (perdida + cargo.recoIps) %}
 			
@@ -90,10 +78,9 @@
 			<td width="570">Total</td>
 			<td width="80">${{ total | number_format(0) }}</td>
 		</tr>
-		
-                <tr>
-			<td width="570">Valor cuota de recuperación a pagar por el usuario</td>
-			<td width="80">${{ pagar | number_format(0) }}</td>
+		<tr>
+			<td width="570">Valor total servicios prestado</td>
+			<td width="80">${{ total | number_format(0) }}</td>
 		</tr>
 		<tr>
 			<td width="570">Valor cuota de recuperación pagada por el usuario</td>

@@ -32,9 +32,7 @@
 	<table class="table table-bordered">
         <tbody>
         	<tr>
-                <td><strong>Fecha</strong></td>
-                <td>{{ factura.fecha | date('d-m-Y H:i') }}</td>
-                <td colspan="3"></td>                
+                <td colspan="5"></td>                
                 <td colspan="2"><strong>FACTURA No.</strong></td>
                 <td colspan="3" ><span class="badge badge-important">{{ factura.id }}</span></td>
             </tr>
@@ -107,7 +105,7 @@
     
 		<form class="form-inline">
 			
-			<select name="actividad" id="actividad" class="input-xxlarge" {% if (factura.estado == 'C') %} disabled="disabled" {% endif %}>
+			<select name="actividad" id="actividad" class="input-xxlarge" {% if (factura.estado == 'C' ) %} disabled="disabled" {% endif %}>
 				<option value="">Seleccione una actividad</option>
 				{% for consulta in consultas %}
 					<option value="{{ consulta.id }}">{{ consulta.nombre }}</option>
@@ -128,15 +126,15 @@
 					<input type="text" class="input-mini" id="cobrar_pte" name="cobrar_pte" value="0" />
 					
 				<label>Pago paciente</label>
-					<input type="text" class="input-small" placeholder="Copago" id="pago_pct" value="0" />
+					<input type="text" class="input-small" placeholder="Copago" id="pago_pct" value="0" readonly="readonly" />
 	
 			{% else %}
 	
 				<label>Cobrar a paciente</label>		
-					<input type="text" class="input-mini" id="cobrar_pte" name="cobrar_pte" value="0" />
+					<input type="text" class="input-mini" id="cobrar_pte" name="cobrar_pte" value="0" readonly="readonly" />
 					
 				<label>Pago paciente</label>
-					<input type="text" class="input-small" placeholder="Copago" id="pago_pct" value="0" />
+					<input type="text" class="input-small" placeholder="Copago" id="pago_pct" value="0" readonly="readonly" />
 	
 			{% endif %}
 	
@@ -175,27 +173,13 @@
 		{% endfor %}
 	</table>
 	
-	{% if cargos is empty %}	
-		<a href="{{ path('facturacion_fv_imprimir', {'factura':factura.id}) }}" id="btn-imprimir-factura" class="btn" style="display:none"><i class="icon-print"></i> Imprimir</a>
-		<a href="{{ path('facturacion_consulta_new') }}" id="btn-nueva-factura" class="btn" style="display:none"><i class="icon-repeat"></i> Nueva factura</a>		
-	{% else %}
-		<a href="{{ path('facturacion_fv_imprimir', {'factura':factura.id}) }}" id="btn-imprimir-factura" class="btn" {% if factura.tipo == 'U' %} style="display:none" {% endif %}><i class="icon-print"></i> Imprimir</a>
-		<a href="{{ path('facturacion_consulta_new') }}" id="btn-nueva-factura" class="btn"><i class="icon-repeat"></i> Nueva factura</a>
-	{% endif %}
-		
+	<a href="{{ path('facturacion_fv_imprimir', {'factura':factura.id}) }}" id="btn-imprimir-factura" class="btn" {% if (factura.estado == 'A' and factura.tipo != 'U') %} style="display:none" {% endif %}><i class="icon-print"></i> Imprimir</a>
+	<a href="{{ path('facturacion_consulta_new') }}" id="btn-nueva-factura" class="btn" {% if (factura.estado == 'A' and factura.tipo != 'U') %} style="display:none" {% endif %}><i class="icon-repeat"></i> Nueva factura</a>
 
 {% endblock %}
 
 {% block javascripts %}
 	<script type="text/javascript">
-
-		$( document ).ready(function() {
-			
-			   window.location.hash="no-back-button";
-			   window.location.hash="Again-No-back-button";
-			   window.onhashchange=function(){window.location.hash="no-back-button";}
-		});
-				
 
 		$("#actividad").change(function() {
 	
@@ -232,20 +216,10 @@
 		$("#cobrar_pte").focusout(function() {
 
 			var cobro = $("#cobrar_pte").val();
+
 			var valor = $("#vr_facturado").val();
-			var pago = $("#pago_pct").val();
 
-			$("#cargo_ips").val(cobro - pago);
 			$("#valor_total").val(valor - cobro);
-		});
-
-		$("#pago_pct").focusout(function() {
-
-			var cobro = $("#cobrar_pte").val();
-
-			var pago = $("#pago_pct").val();
-
-			$("#cargo_ips").val(cobro - pago);
 		});
 
 
@@ -296,13 +270,8 @@
 	
 		            	 $("#facturado").append(html);
 
-		            	 var tipo = "{{ factura.tipo }}";
+		            	 $("#btn-imprimir-factura, #btn-nueva-factura").removeAttr('style');
 
-		            	 if(tipo == 'U'){
-		            		 $("#btn-nueva-factura").removeAttr('style');
-			           	 }else{
-			           		 $("#btn-imprimir-factura, #btn-nueva-factura").removeAttr('style');
-				         }
 		             }
 		             else if(data.responseCode==400){
 		            	$('#jxMsg > span').prepend(data.msg);
@@ -312,9 +281,6 @@
 		         	    alert("Ha ocurrido un error en el sistema.");
 		             }
 		      	});
-			}else{
-				alert('Por favor seleccione la actividad a faturar');
-				return false;
 			}
 		});		
 

@@ -109,22 +109,7 @@ class Factura {
 	 * @ORM\Column(name="farmacia", type="integer", nullable=true)
 	 */
 	private $farmacia;
-        
-        /**
-	 * @var Motivo
-	 *
-	 * @ORM\Column(name="motivo", type="string", nullable=true)
-	 */
-	private $motivo;
 
-        /**
-	 * @var Nfactura
-	 *
-	 * @ORM\Column(name="nfcatura", type="string", nullable=true)
-	 */
-	private $nfactura;
-        
-         
 	/**
 	 * @var servicio
 	 *
@@ -419,51 +404,6 @@ class Factura {
 	 */
 	public function getProfesional() {
 		return $this->profesional;
-	}
-        
-        /**
-	 * Set motivo
-	 *
-	 * @param integer $motivo
-	 * @return Factura
-	 */
-	public function setMotivo($motivo){
-		
-		$this->motivo = $motivo;
-			
-		return $this;
-	}
-
-	/**
-	 * Get motivo
-	 *
-	 * @return integer 
-	 */
-	public function getMotivo() {
-		return $this->motivo;
-	}
-        
-        
-        /**
-	 * Set nfactura
-	 *
-	 * @param integer $nfactura
-	 * @return Factura
-	 */
-	public function setNfactura($nfactura){
-		
-		$this->nfactura = $nfactura;
-			
-		return $this;
-	}
-
-	/**
-	 * Get nfactura
-	 *
-	 * @return integer 
-	 */
-	public function getNfactura() {
-		return $this->nfactura;
 	}
 	
 	/**

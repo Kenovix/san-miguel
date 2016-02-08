@@ -22,6 +22,7 @@ class FacturaCargoType extends AbstractType
 				 	   				'IAR' => 'Informe Actividad Realizada',
 				 	   				'ICRM'=> 'Informe Consultas por Medicos',
 				 	   				'IRR' => 'Informe Remisiones Realizadas',
+				 	   				'IM'  => 'Informe Morbilidad',		 	   		
 				 	   		)
 				 		))
 				 		
