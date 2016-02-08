@@ -430,5 +430,14 @@ file_download_csv:
 gst_contable_menu:
     pattern:  /contable/menu
     defaults: { _controller: ParametrizarBundle:Default:conta }
+
+gst_contable_cliente:
+    pattern:  /contable/cliente
+    defaults: { _controller: ParametrizarBundle:Default:cliente }
+
+gst_contable_proveedor:
+    pattern:  /contable/proveedor
+    defaults: { _controller: ParametrizarBundle:Default:proveedor }
+
     
     

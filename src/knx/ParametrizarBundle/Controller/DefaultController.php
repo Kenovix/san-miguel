@@ -22,4 +22,22 @@ class DefaultController extends Controller
     
     	return $this->render('ParametrizarBundle:Default:conta.html.twig');
     }
+
+    public function ClienteAction()
+    {
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
+        $breadcrumbs->addItem("Inicio", $this->get("router")->generate("parametrizar_index"));
+        $breadcrumbs->addItem("Contabilidad");
+    
+        return $this->render('ParametrizarBundle:Default:cliente.html.twig');
+    }
+
+    public function ProveedorAction()
+    {
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
+        $breadcrumbs->addItem("Inicio", $this->get("router")->generate("parametrizar_index"));
+        $breadcrumbs->addItem("Contabilidad");
+    
+        return $this->render('ParametrizarBundle:Default:proveedor.html.twig');
+    }
 }
